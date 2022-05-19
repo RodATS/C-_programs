@@ -54,6 +54,8 @@ int main()
     archivo<<"Lo lograste\n";
     archivo << "Ayuda\n";
 
+    //para no sobrescribir, llama la fun lectura guarda todo en una variable ej: texto_anterior y luego
+    //archivo << texto_anterior << "Lo lograste\n";
 
     archivo.close();//es necesario cerrarse el archivo
     
