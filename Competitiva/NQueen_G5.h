@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <chrono>
+
 using std::cout;
 using std::endl;
 using std::chrono::milliseconds;
@@ -8,26 +9,29 @@ using std::chrono::steady_clock;
 
 
 
-void ChooseColumns(char**& mat, int r, int n, int x, int y, bool& isFinished);
+bool ChooseColumns(char**& mat, int r, int n, int x);
 bool IsValid(char**& mat, int r, int c, int n);
-double nqueens_G5(const int n, int x, int y);
+double nqueens_5(const int n, int x, int y);
+void PrintTable(char**& mat, int n);
 
-double nqueens_G5(const int n, int x, int y)
+double nqueens_5(const int n, int x, int y)
 {
     auto start = steady_clock::now();
-
+    int i, j;
     char** mat = new char* [n];
     mat[0] = new char[n * n];
-    for (int i = 1; i < n; ++i)
+    for (i = 1; i < n; ++i)
         mat[i] = mat[i - 1] + n;
 
-    for (int i = 0; i < n; ++i)
-        for (int j = 0; j < n; ++j)
+    for (i = 0; i < n; ++i)
+        for ( j = 0; j < n; ++j)
             mat[i][j] = '.';
-    mat[x][y] = 'x';
-    bool isFinished = 0;
 
-    ChooseColumns(mat, 0, n, x, y, isFinished);
+    mat[x][y] = 'x';
+    ChooseColumns(mat, (x+1)%n, n, x);
+    PrintTable(mat,n);
+
+    
     delete mat[0];
     delete[] mat;
 
@@ -38,59 +42,67 @@ double nqueens_G5(const int n, int x, int y)
 
 }
 
-void ChooseColumns(char**& mat, int r, int n, int x, int y, bool& isFinished)
+bool ChooseColumns(char**& mat, int r, int n, int x)
 {
-    if (!isFinished)
-    {
-        if (r == n && (mat[x][y] == 'x'))
+        if(r == x)
+          return true;
+        for (int c = 0; c < n; ++c)
         {
-            for (int i = 0; i < n; i++)
-            {
-                for (int j = 0; j < n; j++)
-                    cout << mat[i][j] << "\t";
-                cout << endl;
-            }
-            cout << endl;
-            isFinished = 1;
-        }
-        for (int c = 0; c < n; c++)
-        {
-            if (IsValid(mat, r, c, n) || (x == r && y == c))
+            if (IsValid(mat, r, c, n))
             {
                 mat[r][c] = 'x';
 
-                ChooseColumns(mat, r + 1, n, x, y, isFinished);
-                if (x != r && y != c)
-                {
-                    mat[r][c] = '.';
-                }
+                if(ChooseColumns(mat, (r + 1)%n, n, x))
+                  return true;
+             
+                mat[r][c] = '.';
+                
             }
         }
-    }
+        return false;
 
 }
 
 bool IsValid(char**& mat, int r, int c, int n)
 {
-
+  int i, j;
+    // fila
+    for ( i = 0; i < n; ++i)
+        if (mat[r][i] == 'x')
+            return false;
     //columna
-    for (int i = 0; i < n; ++i)
+    for ( i = 0; i < n; ++i)
         if (mat[i][c] == 'x')
             return false;
 
-    // fila
-    for (int i = 0; i < n; ++i)
-        if (mat[r][i] == 'x')
-            return false;
-
-
     // diagonal
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
-            if ((mat[i][j] == 'x') && ((i + j == r + c) || (i - j == r - c))) {
-                return false;
-            }
-        }
-    }
-    return true;
+  
+    for (i = r, j = c; i >= 0 && j >= 0; i--, j--)
+  		if (mat[i][j] == 'x')
+  			return false;
+  
+  	for (i = r, j = c; j >= 0 && i < n; i++, j--)
+  		if (mat[i][j]== 'x')
+  			return false;
+  
+  	for (i = r, j = c; i >= 0 && j < n; i--, j++)
+  		if (mat[i][j]== 'x')
+  			return false;
+  
+  	for (i = r, j = c; j < n && i < n; i++, j++)
+  		if (mat[i][j]== 'x')
+  			return false;
+
+  return true;
+}
+
+void PrintTable(char**& mat, int n)
+{  
+  for (int i = 0; i < n; i++)
+  {
+      for (int j = 0; j < n; j++)
+          cout << mat[i][j] << "\t";
+      cout << endl;
+  }
+  cout << endl;
 }
