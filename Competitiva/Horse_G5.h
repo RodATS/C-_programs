@@ -38,7 +38,10 @@ public:
         //si las coordenadas iniciales no estan en el tablero
         if (x < 0 || x >= N || y < 0 || y >= N) {
             cout << "Coordenadas ingresadas fuera de rango" << endl;
-            exit(1);
+            auto end = steady_clock::now();
+            std::chrono::duration<double, std::milli> float_ms = end - start;
+            time = float_ms.count();
+            return;
         }
         //en caso de que todo sea correcto comienza el movimiento
         else {
