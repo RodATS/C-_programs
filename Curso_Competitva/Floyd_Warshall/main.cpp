@@ -7,16 +7,16 @@ int c[10001][10001]; //caminos
 void Floyd(int n){
   for(int k=1;k<n;k++){
     for(int i=1;i<n;i++){
-      //if(i==k){
+      if(i!=k){
         for(int j=1;j<n;j++){
-          //if(j==k || j==i){
+          if(j!=k || j!=i){
             if(d[i][j] > d[i][k]+d[k][j]){
               d[i][j]=d[i][k]+d[k][j];
               c[i][j]=k;
             }
-          //}
+          }
         }
-      //}
+      }
     }
   }
   return;
