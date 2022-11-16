@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
-#include <limits.h>
 
+# define INT_MAX 0x3f3f3f3f
 #define V 9
 
 int minDistance(int dist[], bool Visitados[])
